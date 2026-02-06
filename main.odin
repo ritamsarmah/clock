@@ -24,7 +24,8 @@ HIGH_CUTOFF :: NUM_BINS - 257
 NUM_BANDS :: HIGH_CUTOFF - LOW_CUTOFF
 
 AUDIO_SMOOTHING :: 0.6
-SILENCE_THRESHOLD: f32 = 1e-4
+FREQUENCY_SCALING :: 1.5
+SILENCE_THRESHOLD: f32 = 0.32
 MIN_DB :: -80.0
 MAX_DB :: 0.0
 INVERSE_RANGE :: 1.0 / (MAX_DB - MIN_DB)
@@ -146,11 +147,14 @@ app_iterate :: proc "c" (appstate: rawptr) -> sdl.AppResult {
 
 				// Normalize to 0–1 range based on expected dB limits
 				power = (power - MIN_DB) * INVERSE_RANGE
-				power = math.clamp(power, 0, 1)
 
-				// Map spectrum bins to visual bands with smoothing
-				bands[i] = AUDIO_SMOOTHING * bands[i] + (1 - AUDIO_SMOOTHING) * power
-			}
+				if power < SILENCE_THRESHOLD {
+					bands[i] = SILENCE_THRESHOLD
+					continue
+				}
+
+				power = math.clamp(power, 0, 1)
+				bands[i] = AUDIO_SMOOTHING * bands[i] + (1 - AUDIO_SMOOTHING) * power}
 		}
 	}
 

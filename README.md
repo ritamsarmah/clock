@@ -11,9 +11,9 @@ make compile
 2. Copy necessary files to the Raspberry Pi
 
 ```sh
-scp -r build/ pi@viz:/home/pi/build/
-scp build.sh pi@viz:/home/pi/build.sh
-scp viz.service pi@viz:/home/pi/viz.service
+scp -r build/ pi@viz:/home/pi/
+scp build.sh pi@viz:/home/pi/
+scp viz.service pi@viz:/home/pi/
 ```
 
 3. SSH into the Raspberry Pi to run the following configuration (once)

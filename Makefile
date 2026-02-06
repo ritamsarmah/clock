@@ -12,7 +12,7 @@ run: debug
 	./build/viz
 
 # Compile only producing object files to link on Raspberry Pi
-compile:
+compile: clean
 	mkdir -p $(OUT)
 	odin build .  -target=linux_arm64 -build-mode=object -out:$(OUT)
 

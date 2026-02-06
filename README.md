@@ -1,3 +1,7 @@
+## Introduction
+
+This is a collection of various programs to run on a custom built digital "clock".
+
 ## Installation
 
 These are instructions to compile locally before deploying to a Raspberry Pi to link and enable.
@@ -22,7 +26,7 @@ scp viz.service pi@viz:/home/pi/
 # Install dependencies
 sudo apt install libsdl3-dev
 
-# Enable service
+# (Optional) Enable service to run on startup if desired
 sudo ln -s /home/pi/viz.service /etc/systemd/system/viz.service
 sudo systemctl enable viz.service
 ```

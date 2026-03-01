@@ -38,7 +38,7 @@ app_init :: proc "c" (appstate: ^rawptr, argc: c.int, argv: [^]cstring) -> sdl.A
 	context = runtime.default_context()
 
 	sdl.Log("Initializing %s...\n", APP_NAME)
-	if ok := sdl.SetAppMetadata(APP_NAME, "1.0", "me.ritam.time"); !ok {
+	if ok := sdl.SetAppMetadata(APP_NAME, "1.0", "me.ritam.clock.time"); !ok {
 		sdl.Log("Failed to set app metadata: %s", sdl.GetError())
 		return .FAILURE
 	}
@@ -85,22 +85,22 @@ app_iterate :: proc "c" (appstate: rawptr) -> sdl.AppResult {
 	sdl.SetRenderDrawColor(renderer, 0, 0, 0, sdl.ALPHA_OPAQUE)
 	sdl.RenderClear(renderer)
 
+	// Hours
 	hx := WINDOW_CENTER_X + HOUR_HAND_LEN * math.cos(hour_angle - ANGLE_OFFSET)
 	hy := WINDOW_CENTER_Y + HOUR_HAND_LEN * math.sin(hour_angle - ANGLE_OFFSET)
-
-	mx := WINDOW_CENTER_X + MINUTE_HAND_LEN * math.cos(minute_angle - ANGLE_OFFSET)
-	my := WINDOW_CENTER_Y + MINUTE_HAND_LEN * math.sin(minute_angle - ANGLE_OFFSET)
-
-	sx := WINDOW_CENTER_X + SECOND_HAND_LEN * math.cos(second_angle - ANGLE_OFFSET)
-	sy := WINDOW_CENTER_Y + SECOND_HAND_LEN * math.sin(second_angle - ANGLE_OFFSET)
-
 	sdl.SetRenderDrawColor(renderer, 255, 0, 0, sdl.ALPHA_OPAQUE)
 	sdl.RenderLine(renderer, WINDOW_CENTER_X, WINDOW_CENTER_Y, hx, hy)
 
+	// Minutes
+	mx := WINDOW_CENTER_X + MINUTE_HAND_LEN * math.cos(minute_angle - ANGLE_OFFSET)
+	my := WINDOW_CENTER_Y + MINUTE_HAND_LEN * math.sin(minute_angle - ANGLE_OFFSET)
 	sdl.SetRenderDrawColor(renderer, 0, 255, 0, sdl.ALPHA_OPAQUE)
 	sdl.RenderLine(renderer, WINDOW_CENTER_X, WINDOW_CENTER_Y, mx, my)
 
-	sdl.SetRenderDrawColor(renderer, 0, 0, 255, sdl.ALPHA_OPAQUE)
+	// Seconds
+	sx := WINDOW_CENTER_X + SECOND_HAND_LEN * math.cos(second_angle - ANGLE_OFFSET)
+	sy := WINDOW_CENTER_Y + SECOND_HAND_LEN * math.sin(second_angle - ANGLE_OFFSET)
+	sdl.SetRenderDrawColor(renderer, 255, 255, 255, sdl.ALPHA_OPAQUE)
 	sdl.RenderLine(renderer, WINDOW_CENTER_X, WINDOW_CENTER_Y, sx, sy)
 
 	sdl.RenderPresent(renderer)

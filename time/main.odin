@@ -3,6 +3,8 @@ package main
 import "base:runtime"
 import "core:c"
 import "core:math"
+import os "core:os/os2"
+import "core:strings"
 import "core:time"
 import "core:time/datetime"
 import "core:time/timezone"
@@ -16,8 +18,6 @@ WINDOW_WIDTH :: 800
 WINDOW_HEIGHT :: 800
 WINDOW_CENTER_X :: f32(WINDOW_WIDTH) / 2
 WINDOW_CENTER_Y :: f32(WINDOW_HEIGHT) / 2
-
-TIMEZONE_REGION :: "America/Los_Angeles"
 
 HOUR_HAND_LEN := f32(WINDOW_WIDTH) * 0.25
 MINUTE_HAND_LEN := f32(WINDOW_WIDTH) * 0.35
@@ -60,7 +60,21 @@ app_init :: proc "c" (appstate: ^rawptr, argc: c.int, argv: [^]cstring) -> sdl.A
 		return .FAILURE
 	}
 
-	tz, _ = timezone.region_load(TIMEZONE_REGION)
+	// Read timezone file
+	tz_link, tz_err := os.read_link("/etc/localtime", context.allocator)
+	if tz_err != nil {
+		sdl.Log("Failed to read timezone")
+		return .FAILURE
+	}
+	defer delete(tz_link)
+
+	tz_region := string(tz_link)
+	tz_region = strings.trim_left(tz_region, ".")
+	tz_region = strings.trim_prefix(tz_region, "/usr/share/zoneinfo/")
+
+	sdl.Log("%s", tz_region)
+
+	tz, _ = timezone.region_load(tz_region)
 
 	sdl.SetRenderVSync(renderer, 1)
 	sdl.SetRenderLogicalPresentation(renderer, WINDOW_WIDTH, WINDOW_HEIGHT, .LETTERBOX)

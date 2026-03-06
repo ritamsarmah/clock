@@ -3,7 +3,7 @@ package main
 import "base:runtime"
 import "core:c"
 import "core:math"
-import os "core:os/os2"
+import "core:os"
 import "core:strings"
 import "core:time"
 import "core:time/datetime"

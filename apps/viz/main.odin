@@ -27,7 +27,7 @@ NUM_BANDS :: HIGH_CUTOFF - LOW_CUTOFF
 
 AUDIO_SMOOTHING :: 0.2
 FREQUENCY_SCALING :: 0.2
-SILENCE_THRESHOLD: f32 = 0.4
+SILENCE_THRESHOLD: f32 = 0.2
 MIN_DB :: -80.0
 MAX_DB :: 0.0
 INVERSE_RANGE :: 1.0 / (MAX_DB - MIN_DB)
@@ -155,10 +155,10 @@ app_iterate :: proc "c" (appstate: rawptr) -> sdl.AppResult {
 					continue
 				}
 
-				power = math.clamp(power, 0, 1)
+				// power = math.clamp(power, 0, 1)
 
 				// Frequency-dependent scaling
-				// power *= 1 + math.pow(f32(i) / (NUM_BANDS - 1), FREQUENCY_SCALING)
+				power *= 1 + math.pow(f32(i) / (NUM_BANDS - 1), FREQUENCY_SCALING)
 				bands[i] = AUDIO_SMOOTHING * bands[i] + (1 - AUDIO_SMOOTHING) * power}
 		}
 	}
